@@ -1,0 +1,75 @@
+{
+	"name": "Comentario",
+	"version": "1.0",
+	"author": [
+		"[https://github.com/jayktaylor Jayden Bailey]",
+		"..."
+	],
+	"url": "https://weirdgloop.org",
+	"descriptionmsg": "comentario-desc",
+	"license-name": "GPL-3.0-or-later",
+	"type": "specialpage",
+	"requires": {
+		"MediaWiki": ">= 1.41.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\Comentario\\": "src/"
+	},
+	"MessagesDirs": {
+		"Comentario": [
+			"i18n"
+		]
+	},
+	"config_prefix": "wgComentario",
+	"config": {
+		"Server": {
+			"value": "",
+			"description": "URL path of your self-hosted Comentario server (no trailing slash)."
+		},
+		"SSOSecret": {
+			"value": "",
+			"description": "SSO secret used when setting up single sign-on in the Comentario dashboard."
+		},
+		"Namespaces": {
+			"value": null,
+			"description": "Array of namespace IDs to show comments on. If null, defaults to wgContentNamespaces."
+		}
+	},
+	"Hooks": {
+		"BeforePageDisplay": "main"
+	},
+	"HookHandlers": {
+		"main": {
+			"class": "MediaWiki\\Extension\\Comentario\\ComentarioHooks",
+			"services": [
+				"MainConfig"
+			]
+		}
+	},
+	"RestRoutes": [
+		{
+			"path": "/comentario/v1/sso",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\Comentario\\RestApiSSO",
+			"services": [
+				"MainConfig",
+				"UserFactory"
+			]
+		}
+	],
+	"ResourceFileModulePaths": {
+		"localBasePath": "src/modules",
+		"remoteExtPath": "Comentario/src/modules"
+	},
+	"ResourceModules": {
+		"ext.comentario.styles": {
+			"class": "MediaWiki\\ResourceLoader\\CodexModule",
+			"styles": "ext.comentario.styles/styles.less",
+			"codexStyleOnly": "true",
+			"codexComponents": [
+				"CdxIcon"
+			]
+		}
+	},
+	"manifest_version": 2
+}
