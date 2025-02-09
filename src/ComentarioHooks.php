@@ -34,23 +34,30 @@ class ComentarioHooks implements BeforePageDisplayHook {
 		$out, $skin
 	): void {
 		if ( empty( $this->server ) ) {
-			// If there is no script path configured, then simply show nothing.
 			return;
 		}
 
 		$title = $out->getTitle();
 		if (
+			// Do not run on special pages, or anything other than action=view
 			$title->isMainPage() ||
 			$title->isSpecialPage() ||
 			$out->getActionName() !== 'view' ||
 			!in_array( $title->getNamespace(), $this->namespaces )
 		) {
-			// Do not run on special pages, or anything other than action=view
 			return;
 		}
 
 		$out->addModuleStyles( 'ext.comentario.styles' );
+		if ( !$out->getContext()->getAuthority()->isRegistered() ) {
+			$out->addModuleStyles( 'ext.comentario.anon.styles' );
+		}
+
 		$out->addScriptFile( $this->server . '/comentario.js' );
-		$out->addHTML( '<div class="comentario-container"><h3><span class="mw-comentario-comments-icon"></span> Comments</h3><comentario-comments id="comentario-comments" auto-non-interactive-sso="true" theme="light"></comentario-comments></div>' );
+		$out->addHTML(
+			'<div class="comentario-container"><h3><span class="mw-comentario-comments-icon"></span> Comments</h3>'
+			. '<comentario-comments id="comentario-comments" theme="light"></comentario-comments></div>'
+		);
+		$out->addModules( 'ext.comentario' );
 	}
 }
