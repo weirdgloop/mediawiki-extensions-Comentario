@@ -53,10 +53,12 @@ class ComentarioHooks implements BeforePageDisplayHook {
 			$out->addModuleStyles( 'ext.comentario.anon.styles' );
 		}
 
+		$pageId = $title->getId();
+
 		$out->addScriptFile( $this->server . '/comentario.js' );
 		$out->addHTML(
 			'<div class="comentario-container"><h3><span class="mw-comentario-comments-icon"></span> Comments</h3>'
-			. '<comentario-comments id="comentario-comments" theme="light"></comentario-comments></div>'
+			. "<comentario-comments id='comentario-comments' page-id='/$pageId' theme='light' auto-init='false' auto-non-interactive-sso='false'></comentario-comments></div>"
 		);
 		$out->addModules( 'ext.comentario' );
 	}

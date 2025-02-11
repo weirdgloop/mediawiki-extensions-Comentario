@@ -46,6 +46,7 @@ class RestApiSSO extends SimpleHandler {
 		}
 
 		$user = $this->userFactory->newFromAuthority( $auth );
+		$userId = $user->getId();
 		$payload = [
 			"token" => $token,
 			"name" => $user->getName(),
@@ -53,7 +54,7 @@ class RestApiSSO extends SimpleHandler {
 			// Comentario does not have validation on the email, so we can pass it a unique string instead..
 			// This is quite hacky, but is kind of the only way to deal with this for now.
 			// See: https://gitlab.com/comentario/comentario/-/issues/100
-			"email" => $this->config->get( 'DBname' ) . '|' . $user->getName()
+			"email" => ( $userId > 0 ? $userId : $user->getName() ) . '@' . $this->config->get( 'SharedDB' )
 		];
 
 		$payloadJson = json_encode( $payload );
